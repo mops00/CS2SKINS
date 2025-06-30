@@ -264,13 +264,22 @@
             border: 1px solid #444;
             margin: 0 10px; /* Spacing between skins */
             display: flex;
+            flex-direction: column; /* To stack image and text */
             align-items: center;
             justify-content: center;
             border-radius: 5px;
-            font-size: 0.9em;
+            font-size: 0.8em; /* Smaller font for skin name */
             text-align: center;
             color: #eee;
             box-sizing: border-box; /* Include padding and border in width */
+            overflow: hidden; /* Hide overflowing text */
+        }
+
+        .skin img {
+            max-width: 90%;
+            max-height: 70%;
+            object-fit: contain;
+            margin-bottom: 5px;
         }
 
         .close-button {
@@ -336,6 +345,18 @@
 
         .shop-item button:hover {
             background-color: #218838;
+        }
+
+        .shop-item .discord-link {
+            font-size: 0.8em;
+            margin-top: 10px;
+            color: #7289DA; /* Discord blue */
+            text-decoration: none;
+            display: block;
+        }
+
+        .shop-item .discord-link:hover {
+            text-decoration: underline;
         }
 
         /* FAQ list styles */
@@ -411,6 +432,23 @@
             flex-grow: 1; /* Allow skin name to take available space */
             text-align: left;
             color: #eee;
+        }
+
+        .inventory-item .skin-details {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            flex-grow: 1;
+        }
+
+        .inventory-item .skin-name {
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        .inventory-item .skin-price {
+            font-size: 0.9em;
+            color: #ccc;
         }
 
         .inventory-item .buttons-container {
@@ -602,6 +640,10 @@
             </li>
         </ul>
         <p style="color: #ccc; margin-top: 20px;">Aby zostać VIP-em, skontaktuj się z naszym supportem! Ceny pakietów VIP zaczynają się od 200 zł/miesiąc.</p>
+        <!-- VIP button with Discord link -->
+        <a href="https://discord.gg/B4QE6AyeuF" target="_blank" style="text-decoration: none;">
+            <button style="background-color: #FFD700; color: #1a1a1a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 15px;">Zostań VIP-em!</button>
+        </a>
     </section>
 
     <section id="shop">
@@ -656,7 +698,7 @@
                 <strong>Email:</strong> <a href="mailto:support@cs2skins.pl" style="color: #FFD700; text-decoration: none;">support@cs2skins.pl</a> <br> (Staramy się odpowiadać na wszystkie zapytania mailowe w ciągu 24 godzin.)
             </li>
             <li style="background-color: #222; margin-bottom: 8px; padding: 10px; border-radius: 5px; border: 1px solid #333;">
-                <strong>Discord:</strong> Dołącz do naszej aktywnej społeczności na <span style="color: #FFD700;">discord.gg/cs2skins</span>. Na naszym serwerze Discord znajdziesz kanały wsparcia, gdzie możesz zadać pytania, zgłosić problemy i uzyskać pomoc od naszego zespołu oraz innych graczy. To również świetne miejsce do nawiązywania nowych znajomości!
+                <strong>Discord:</strong> Dołącz do naszej aktywnej społeczności na <a href="https://discord.gg/B4QE6AyeuF" style="color: #FFD700; text-decoration: none;" target="_blank">discord.gg/B4QE6AyeuF</a>. Na naszym serwerze Discord znajdziesz kanały wsparcia, gdzie możesz zadać pytania, zgłosić problemy i uzyskać pomoc od naszego zespołu oraz innych graczy. To również świetne miejsce do nawiązywania nowych znajomości!
             </li>
             <li style="background-color: #222; padding: 10px; border-radius: 5px; border: 1px solid #333;">
                 <strong>Formularz kontaktowy:</strong> (W budowie - planujemy wkrótce udostępnić wygodny formularz kontaktowy bezpośrednio na stronie, aby jeszcze bardziej ułatwić komunikację.)
@@ -735,18 +777,34 @@
 
     let currentWithdrawIndex = -1; // To store the index of the item being withdrawn
 
-    // Skin data definition for each case
+    // Skin data definition for each case, now including image URLs
+    // Note: These are placeholder URLs. You would replace them with actual image links.
     const skinData = {
         "inferno-pack": {
             name: "Inferno Pack",
             price: 199.99,
             image: "https://placehold.co/150x150/FFD700/000?text=Inferno+Pack",
             skins: [
-                'AK-47 | Redline', 'AWP | Asiimov', 'Glock-18 | Fade', 'Karambit | Doppler',
-                'M4A4 | Howl', 'Desert Eagle | Blaze', 'Butterfly Knife | Fade', 'AK-47 | Neon Rider',
-                'AWP | Gungnir', 'M4A1-S | Printstream', 'Glock-18 | Water Elemental', 'USP-S | Printstream',
-                'AWP | Fade', 'Karambit | Gamma Doppler', 'StatTrak™ AK-47 | Case Hardened', 'M4A4 | Poseidon',
-                'AK-47 | Fire Serpent', 'AWP | Medusa', 'Karambit | Marble Fade', 'M9 Bayonet | Doppler Sapphire'
+                { name: 'AK-47 | Redline', image: 'https://placehold.co/100x60/333/eee?text=Redline', price: 150.00 },
+                { name: 'AWP | Asiimov', image: 'https://placehold.co/100x60/333/eee?text=Asiimov', price: 250.00 },
+                { name: 'Glock-18 | Fade', image: 'https://placehold.co/100x60/333/eee?text=Glock+Fade', price: 300.00 },
+                { name: 'Karambit | Doppler', image: 'https://placehold.co/100x60/333/eee?text=Karambit+Doppler', price: 9500.00 },
+                { name: 'M4A4 | Howl', image: 'https://placehold.co/100x60/333/eee?text=M4A4+Howl', price: 12000.00 },
+                { name: 'Desert Eagle | Blaze', image: 'https://placehold.co/100x60/333/eee?text=Blaze', price: 400.00 },
+                { name: 'Butterfly Knife | Fade', image: 'https://placehold.co/100x60/333/eee?text=Butterfly+Fade', price: 7200.00 },
+                { name: 'AK-47 | Neon Rider', image: 'https://placehold.co/100x60/333/eee?text=Neon+Rider', price: 180.00 },
+                { name: 'AWP | Gungnir', image: 'https://placehold.co/100x60/333/eee?text=Gungnir', price: 15000.00 },
+                { name: 'M4A1-S | Printstream', image: 'https://placehold.co/100x60/333/eee?text=Printstream', price: 220.00 },
+                { name: 'Glock-18 | Water Elemental', image: 'https://placehold.co/100x60/333/eee?text=Water+Elemental', price: 90.00 },
+                { name: 'USP-S | Printstream', image: 'https://placehold.co/100x60/333/eee?text=USP+Printstream', price: 110.00 },
+                { name: 'AWP | Fade', image: 'https://placehold.co/100x60/333/eee?text=AWP+Fade', price: 5000.00 },
+                { name: 'Karambit | Gamma Doppler', image: 'https://placehold.co/100x60/333/eee?text=Gamma+Doppler', price: 8500.00 },
+                { name: 'StatTrak™ AK-47 | Case Hardened', image: 'https://placehold.co/100x60/333/eee?text=Case+Hardened', price: 3800.00 },
+                { name: 'M4A4 | Poseidon', image: 'https://placehold.co/100x60/333/eee?text=Poseidon', price: 4500.00 },
+                { name: 'AK-47 | Fire Serpent', image: 'https://placehold.co/100x60/333/eee?text=Fire+Serpent', price: 3800.00 },
+                { name: 'AWP | Medusa', image: 'https://placehold.co/100x60/333/eee?text=Medusa', price: 10000.00 },
+                { name: 'Karambit | Marble Fade', image: 'https://placehold.co/100x60/333/eee?text=Marble+Fade', price: 6000.00 },
+                { name: 'M9 Bayonet | Doppler Sapphire', image: 'https://placehold.co/100x60/333/eee?text=Doppler+Sapphire', price: 11000.00 }
             ]
         },
         "death-zone": {
@@ -754,10 +812,22 @@
             price: 99.99,
             image: "https://placehold.co/150x150/FFD700/000?text=Death+Zone",
             skins: [
-                'AWP | Asiimov', 'USP-S | Kill Confirmed', 'M4A4 | Buzz Kill', 'AK-47 | Frontside Misty',
-                'Glock-18 | Candy Apple', 'P90 | Asiimov', 'AWP | Hyper Beast', 'Desert Eagle | Kumicho Dragon',
-                'M4A1-S | Guardian', 'Five-SeveN | Hyper Beast', 'MP9 | Hypnotic', 'AK-47 | Vulcan',
-                'USP-S | Cortex', 'M4A4 | Desolate Space', 'AWP | Fever Dream', 'Glock-18 | Off World'
+                { name: 'AWP | Asiimov', image: 'https://placehold.co/100x60/333/eee?text=Asiimov', price: 250.00 },
+                { name: 'USP-S | Kill Confirmed', image: 'https://placehold.co/100x60/333/eee?text=Kill+Confirmed', price: 120.00 },
+                { name: 'M4A4 | Buzz Kill', image: 'https://placehold.co/100x60/333/eee?text=Buzz+Kill', price: 80.00 },
+                { name: 'AK-47 | Frontside Misty', image: 'https://placehold.co/100x60/333/eee?text=Frontside+Misty', price: 70.00 },
+                { name: 'Glock-18 | Candy Apple', image: 'https://placehold.co/100x60/333/eee?text=Candy+Apple', price: 30.00 },
+                { name: 'P90 | Asiimov', image: 'https://placehold.co/100x60/333/eee?text=P90+Asiimov', price: 50.00 },
+                { name: 'AWP | Hyper Beast', image: 'https://placehold.co/100x60/333/eee?text=Hyper+Beast', price: 180.00 },
+                { name: 'Desert Eagle | Kumicho Dragon', image: 'https://placehold.co/100x60/333/eee?text=Kumicho+Dragon', price: 90.00 },
+                { name: 'M4A1-S | Guardian', image: 'https://placehold.co/100x60/333/eee?text=Guardian', price: 60.00 },
+                { name: 'Five-SeveN | Hyper Beast', image: 'https://placehold.co/100x60/333/eee?text=Five-SeveN+Hyper+Beast', price: 40.00 },
+                { name: 'MP9 | Hypnotic', image: 'https://placehold.co/100x60/333/eee?text=Hypnotic', price: 25.00 },
+                { name: 'AK-47 | Vulcan', image: 'https://placehold.co/100x60/333/eee?text=Vulcan', price: 100.00 },
+                { name: 'USP-S | Cortex', image: 'https://placehold.co/100x60/333/eee?text=Cortex', price: 75.00 },
+                { name: 'M4A4 | Desolate Space', image: 'https://placehold.co/100x60/333/eee?text=Desolate+Space', price: 110.00 },
+                { name: 'AWP | Fever Dream', image: 'https://placehold.co/100x60/333/eee?text=Fever+Dream', price: 130.00 },
+                { name: 'Glock-18 | Off World', image: 'https://placehold.co/100x60/333/eee?text=Off+World', price: 55.00 }
             ]
         },
         "headshot-heaven": {
@@ -765,10 +835,20 @@
             price: 49.99,
             image: "https://placehold.co/150x150/FFD700/000?text=Headshot+Heaven",
             skins: [
-                'USP-S | Kill Confirmed', 'Glock-18 | Fade', 'AK-47 | Legion of Anubis', 'M4A4 | The Emperor',
-                'Desert Eagle | Code Red', 'AWP | Mortis', 'P250 | Asiimov', 'Five-SeveN | Neon Noir',
-                'M4A1-S | Cyrex', 'AK-47 | Fuel Injector', 'Desert Eagle | Hypnotic', 'USP-S | Blueprint',
-                'AK-47 | Bloodsport', 'M4A4 | Neo-Noir'
+                { name: 'USP-S | Kill Confirmed', image: 'https://placehold.co/100x60/333/eee?text=Kill+Confirmed', price: 120.00 },
+                { name: 'Glock-18 | Fade', image: 'https://placehold.co/100x60/333/eee?text=Glock+Fade', price: 300.00 },
+                { name: 'AK-47 | Legion of Anubis', image: 'https://placehold.co/100x60/333/eee?text=Legion+of+Anubis', price: 60.00 },
+                { name: 'M4A4 | The Emperor', image: 'https://placehold.co/100x60/333/eee?text=The+Emperor', price: 90.00 },
+                { name: 'Desert Eagle | Code Red', image: 'https://placehold.co/100x60/333/eee?text=Code+Red', price: 50.00 },
+                { name: 'AWP | Mortis', image: 'https://placehold.co/100x60/333/eee?text=Mortis', price: 70.00 },
+                { name: 'P250 | Asiimov', image: 'https://placehold.co/100x60/333/eee?text=P250+Asiimov', price: 35.00 },
+                { name: 'Five-SeveN | Neon Noir', image: 'https://placehold.co/100x60/333/eee?text=Neon+Noir', price: 45.00 },
+                { name: 'M4A1-S | Cyrex', image: 'https://placehold.co/100x60/333/eee?text=Cyrex', price: 55.00 },
+                { name: 'AK-47 | Fuel Injector', image: 'https://placehold.co/100x60/333/eee?text=Fuel+Injector', price: 150.00 },
+                { name: 'Desert Eagle | Hypnotic', image: 'https://placehold.co/100x60/333/eee?text=Hypnotic', price: 20.00 },
+                { name: 'USP-S | Blueprint', image: 'https://placehold.co/100x60/333/eee?text=Blueprint', price: 30.00 },
+                { name: 'AK-47 | Bloodsport', image: 'https://placehold.co/100x60/333/eee?text=Bloodsport', price: 130.00 },
+                { name: 'M4A4 | Neo-Noir', image: 'https://placehold.co/100x60/333/eee?text=Neo-Noir', price: 100.00 }
             ]
         },
         "eco-rush": {
@@ -776,9 +856,18 @@
             price: 14.99,
             image: "https://placehold.co/150x150/FFD700/000?text=Eco+Rush",
             skins: [
-                'Glock-18 | Fade', 'USP-S | Guardian', 'P250 | Franklin', 'Tec-9 | Hades',
-                'Nova | Hyper Beast', 'MP9 | Ruby', 'UMP-45 | Primal Saber', 'PP-Bizon | Judgement of Anubis',
-                'Galil AR | Sugar Rush', 'FAMAS | Valence', 'P2000 | Amber Fade', 'MP5-SD | Nitros'
+                { name: 'Glock-18 | Fade', image: 'https://placehold.co/100x60/333/eee?text=Glock+Fade', price: 300.00 },
+                { name: 'USP-S | Guardian', image: 'https://placehold.co/100x60/333/eee?text=Guardian', price: 20.00 },
+                { name: 'P250 | Franklin', image: 'https://placehold.co/100x60/333/eee?text=Franklin', price: 15.00 },
+                { name: 'Tec-9 | Hades', image: 'https://placehold.co/100x60/333/eee?text=Hades', price: 10.00 },
+                { name: 'Nova | Hyper Beast', image: 'https://placehold.co/100x60/333/eee?text=Nova+Hyper+Beast', price: 25.00 },
+                { name: 'MP9 | Ruby', image: 'https://placehold.co/100x60/333/eee?text=Ruby', price: 18.00 },
+                { name: 'UMP-45 | Primal Saber', image: 'https://placehold.co/100x60/333/eee?text=Primal+Saber', price: 12.00 },
+                { name: 'PP-Bizon | Judgement of Anubis', image: 'https://placehold.co/100x60/333/eee?text=Judgement+of+Anubis', price: 8.00 },
+                { name: 'Galil AR | Sugar Rush', image: 'https://placehold.co/100x60/333/eee?text=Sugar+Rush', price: 22.00 },
+                { name: 'FAMAS | Valence', image: 'https://placehold.co/100x60/333/eee?text=Valence', price: 16.00 },
+                { name: 'P2000 | Amber Fade', image: 'https://placehold.co/100x60/333/eee?text=Amber+Fade', price: 30.00 },
+                { name: 'MP5-SD | Nitros', image: 'https://placehold.co/100x60/333/eee?text=Nitros', price: 14.00 }
             ]
         },
         "opulence": {
@@ -786,10 +875,21 @@
             price: 999.99,
             image: "https://placehold.co/150x150/FFD700/000?text=Opulence",
             skins: [
-                'Karambit | Doppler', 'AWP | Fade', 'StatTrak™ M9 Bayonet | Gamma Doppler', 'Driver Gloves | Imperial Plaid',
-                'Sport Gloves | Pandora\'s Box', 'AWP | Dragon Lore', 'M4A4 | Poseidon', 'Karambit | Lore',
-                'Butterfly Knife | Marble Fade', 'Bayonet | Gamma Doppler Emerald', 'Gloves | Fade',
-                'AWP | Gungnir', 'Karambit | Gamma Doppler Emerald', 'M9 Bayonet | Lore', 'Butterfly Knife | Lore'
+                { name: 'Karambit | Doppler', image: 'https://placehold.co/100x60/333/eee?text=Karambit+Doppler', price: 9500.00 },
+                { name: 'AWP | Fade', image: 'https://placehold.co/100x60/333/eee?text=AWP+Fade', price: 5000.00 },
+                { name: 'StatTrak™ M9 Bayonet | Gamma Doppler', image: 'https://placehold.co/100x60/333/eee?text=M9+Gamma+Doppler', price: 10000.00 },
+                { name: 'Driver Gloves | Imperial Plaid', image: 'https://placehold.co/100x60/333/eee?text=Imperial+Plaid', price: 7000.00 },
+                { name: 'Sport Gloves | Pandora\'s Box', image: 'https://placehold.co/100x60/333/eee?text=Pandora\'s+Box', price: 10500.00 },
+                { name: 'AWP | Dragon Lore', image: 'https://placehold.co/100x60/333/eee?text=Dragon+Lore', price: 12000.00 },
+                { name: 'M4A4 | Poseidon', image: 'https://placehold.co/100x60/333/eee?text=Poseidon', price: 4500.00 },
+                { name: 'Karambit | Lore', image: 'https://placehold.co/100x60/333/eee?text=Karambit+Lore', price: 8000.00 },
+                { name: 'Butterfly Knife | Marble Fade', image: 'https://placehold.co/100x60/333/eee?text=Butterfly+Marble+Fade', price: 6500.00 },
+                { name: 'Bayonet | Gamma Doppler Emerald', image: 'https://placehold.co/100x60/333/eee?text=Emerald+Bayonet', price: 11000.00 },
+                { name: 'Gloves | Fade', image: 'https://placehold.co/100x60/333/eee?text=Gloves+Fade', price: 5500.00 },
+                { name: 'AWP | Gungnir', image: 'https://placehold.co/100x60/333/eee?text=Gungnir', price: 15000.00 },
+                { name: 'Karambit | Gamma Doppler Emerald', image: 'https://placehold.co/100x60/333/eee?text=Karambit+Emerald', price: 13000.00 },
+                { name: 'M9 Bayonet | Lore', image: 'https://placehold.co/100x60/333/eee?text=M9+Lore', price: 9000.00 },
+                { name: 'Butterfly Knife | Lore', image: 'https://placehold.co/100x60/333/eee?text=Butterfly+Lore', price: 8200.00 }
             ]
         }
     };
@@ -820,13 +920,22 @@
             description: "Zawiera 3 klucze i 1 booster.",
             image: "https://placehold.co/80x80/FFD700/000?text=Pack"
         }
+        // Removed "Discord Link" from shopItemsData as per request
     };
 
     // Pool of rare skins for "Random Rare Skin" purchase
+    // Ensure these objects also have image and price properties
     const rareSkinsPool = [
-        'AWP | Dragon Lore', 'Karambit | Doppler', 'M4A4 | Howl', 'Butterfly Knife | Fade',
-        'AK-47 | Fire Serpent', 'M9 Bayonet | Emerald', 'Sport Gloves | Pandora\'s Box',
-        'AWP | Gungnir', 'StatTrak™ AK-47 | Case Hardened', 'Desert Eagle | Blaze'
+        { name: 'AWP | Dragon Lore', image: 'https://placehold.co/100x60/333/eee?text=Dragon+Lore', price: 12000.00 },
+        { name: 'Karambit | Doppler', image: 'https://placehold.co/100x60/333/eee?text=Karambit+Doppler', price: 9500.00 },
+        { name: 'M4A4 | Howl', image: 'https://placehold.co/100x60/333/eee?text=M4A4+Howl', price: 12000.00 },
+        { name: 'Butterfly Knife | Fade', image: 'https://placehold.co/100x60/333/eee?text=Butterfly+Fade', price: 7200.00 },
+        { name: 'AK-47 | Fire Serpent', image: 'https://placehold.co/100x60/333/eee?text=Fire+Serpent', price: 3800.00 },
+        { name: 'M9 Bayonet | Emerald', image: 'https://placehold.co/100x60/333/eee?text=Emerald+Bayonet', price: 8000.00 },
+        { name: 'Sport Gloves | Pandora\'s Box', image: 'https://placehold.co/100x60/333/eee?text=Pandora\'s+Box', price: 10500.00 },
+        { name: 'AWP | Gungnir', image: 'https://placehold.co/100x60/333/eee?text=Gungnir', price: 15000.00 },
+        { name: 'StatTrak™ AK-47 | Case Hardened', image: 'https://placehold.co/100x60/333/eee?text=Case+Hardened', price: 3800.00 },
+        { name: 'Desert Eagle | Blaze', image: 'https://placehold.co/100x60/333/eee?text=Blaze', price: 400.00 }
     ];
 
     let balance = parseFloat(localStorage.getItem('userBalance')) || 0.00; // Load balance from localStorage
@@ -854,9 +963,9 @@
     /**
      * Generates the skin strip for animation, placing the winning skin at a specific position.
      * Mixed pool of skins to increase realism.
-     * @param {string} winningSkin - The name of the skin to be won.
-     * @param {Array<string>} skinsPoolForCase - Pool of skins available in this case.
-     * @param {Array<string>} allSkinsGlobal - Global pool of all available skins to fill the strip.
+     * @param {object} winningSkin - The object of the skin to be won (name, image, price).
+     * @param {Array<object>} skinsPoolForCase - Pool of skins available in this case.
+     * @param {Array<object>} allSkinsGlobal - Global pool of all available skins to fill the strip.
      * @returns {number} The index at which the winning skin was placed in the strip.
      */
     function generateSkinStrip(winningSkin, skinsPoolForCase, allSkinsGlobal) {
@@ -869,7 +978,7 @@
         const displaySkins = [];
         for (let i = 0; i < NUM_SKINS_IN_STRIP; i++) {
             if (i === winningSkinIndex) {
-                displaySkins.push(winningSkin); // Place the winning skin
+                displaySkins.push(winningSkin); // Place the winning skin object
             } else {
                 let skinToAdd;
                 // More likely to pick skins from the current case's pool
@@ -890,10 +999,20 @@
         }
 
         // Fill the strip with skins
-        displaySkins.forEach(skinName => {
+        displaySkins.forEach(skinObj => {
             const skinDiv = document.createElement("div");
             skinDiv.className = "skin";
-            skinDiv.innerText = skinName;
+
+            const img = document.createElement("img");
+            img.src = skinObj.image;
+            img.alt = skinObj.name;
+            img.onerror = function() { this.src = `https://placehold.co/100x60/333/eee?text=${encodeURIComponent(skinObj.name.split(' ')[0])}`; }; // Fallback image
+            skinDiv.appendChild(img);
+
+            const nameSpan = document.createElement("span");
+            nameSpan.innerText = skinObj.name;
+            skinDiv.appendChild(nameSpan);
+
             skinStrip.appendChild(skinDiv);
         });
 
@@ -964,8 +1083,8 @@
 
             // Display won skin after animation ends
             setTimeout(() => {
-                wonSkinDisplay.innerText = "Gratulacje! Wygrałeś: " + winningSkin;
-                inventory.push({ name: winningSkin, initialValue: price }); // Add skin to inventory with its case price
+                wonSkinDisplay.innerText = "Gratulacje! Wygrałeś: " + winningSkin.name;
+                inventory.push({ name: winningSkin.name, image: winningSkin.image, price: winningSkin.price }); // Add skin to inventory with its case price
                 updateInventory(); // Update inventory display
             }, ANIMATION_DURATION_MS); // Animation duration
         } else {
@@ -989,13 +1108,25 @@
                 li.className = "inventory-item";
                 // Placeholder image for inventory item
                 const img = document.createElement("img");
-                img.src = `https://placehold.co/80x60/333/eee?text=${encodeURIComponent(item.name.split(' ')[0])}`;
+                img.src = item.image;
                 img.alt = item.name;
+                img.onerror = function() { this.src = `https://placehold.co/80x60/333/eee?text=${encodeURIComponent(item.name.split(' ')[0])}`; }; // Fallback image
                 li.appendChild(img);
 
-                const span = document.createElement("span");
-                span.innerText = item.name;
-                li.appendChild(span);
+                const detailsDiv = document.createElement("div");
+                detailsDiv.className = "skin-details";
+
+                const nameSpan = document.createElement("span");
+                nameSpan.className = "skin-name";
+                nameSpan.innerText = item.name;
+                detailsDiv.appendChild(nameSpan);
+
+                const priceSpan = document.createElement("span");
+                priceSpan.className = "skin-price";
+                priceSpan.innerText = `Wartość: ${item.price.toFixed(2)} zł`;
+                detailsDiv.appendChild(priceSpan);
+
+                li.appendChild(detailsDiv);
 
                 const buttonsContainer = document.createElement("div");
                 buttonsContainer.className = "buttons-container";
@@ -1030,7 +1161,7 @@
         if (indexToSell >= 0 && indexToSell < inventory.length) {
             const soldItem = inventory.splice(indexToSell, 1)[0]; // Remove item from inventory
             // Calculate sell price (10-50% of initial value, or default if not available)
-            const baseValue = soldItem.initialValue || 20.00; // Default value if initialValue is not set
+            const baseValue = soldItem.price || 20.00; // Use the skin's price as base value
             const sellPrice = baseValue * (0.1 + Math.random() * 0.4); // 10% to 50%
             balance += sellPrice;
             updateBalanceDisplay();
@@ -1186,6 +1317,10 @@
             return;
         }
 
+        // The Discord Link item is removed from shopItemsData,
+        // so this specific check for "Discord Link" is no longer needed here for purchase logic.
+        // The Discord link will now be under each "Kup" button.
+
         const purchaseCost = itemInfo.price;
 
         if (balance >= purchaseCost) {
@@ -1197,15 +1332,15 @@
             // Add logic for specific item purchases
             if (itemKey === "Random Rare Skin") {
                 const randomRareSkin = rareSkinsPool[Math.floor(Math.random() * rareSkinsPool.length)];
-                inventory.push({ name: randomRareSkin, initialValue: purchaseCost }); // Add to inventory
+                inventory.push(randomRareSkin); // Add to inventory
                 updateInventory();
-                message += ` Wylosowano: ${randomRareSkin}!`;
+                message += ` Wylosowano: ${randomRareSkin.name}!`;
             } else if (itemKey === "Starter Pack") {
                 // Example: Add 3 Elite Keys and 1 XP Booster
-                inventory.push({ name: "Klucz do Skrzynki Elite", initialValue: 15.00 });
-                inventory.push({ name: "Klucz do Skrzynki Elite", initialValue: 15.00 });
-                inventory.push({ name: "Klucz do Skrzynki Elite", initialValue: 15.00 });
-                inventory.push({ name: "Wzmacniacz XP (24h)", initialValue: 10.00 });
+                inventory.push({ name: "Klucz do Skrzynki Elite", image: "https://placehold.co/80x60/FFD700/000?text=Key", price: 15.00 });
+                inventory.push({ name: "Klucz do Skrzynki Elite", image: "https://placehold.co/80x60/FFD700/000?text=Key", price: 15.00 });
+                inventory.push({ name: "Klucz do Skrzynki Elite", image: "https://placehold.co/80x60/FFD700/000?text=Key", price: 15.00 });
+                inventory.push({ name: "Wzmacniacz XP (24h)", image: "https://placehold.co/80x60/FFD700/000?text=XP", price: 10.00 });
                 updateInventory();
                 message += ` Otrzymano 3 Klucze do Skrzynki Elite i 1 Wzmacniacz XP!`;
             }
@@ -1273,6 +1408,7 @@
                 <p class="price-tag">Cena: ${itemInfo.price.toFixed(2)} zł</p>
                 <p style="font-size:0.9em; color:#888;">${itemInfo.description}</p>
                 <button data-item="${itemKey}">Kup ${itemInfo.name.split(' ')[0]}</button>
+                <a href="https://discord.gg/B4QE6AyeuF" target="_blank" class="discord-link">Dołącz do Discorda!</a>
             `;
             shopItemsContainer.appendChild(shopItemDiv);
         }
